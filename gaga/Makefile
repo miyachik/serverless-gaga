@@ -1,15 +1,13 @@
-.PHONY: build clean deploy gomodgen
+.PHONY: build clean deploy
 
-build: gomodgen
+build:
 	export GO111MODULE=on
 	env GOOS=linux go build -ldflags="-s -w" -o bin/gaga gaga/main.go
 
 clean:
-	rm -rf ./bin ./vendor Gopkg.lock
+	rm -rf ./bin ./vendor
 
 deploy: clean build
 	sls deploy --verbose
+	sls s3deploy
 
-gomodgen:
-	chmod u+x gomod.sh
-	./gomod.sh
